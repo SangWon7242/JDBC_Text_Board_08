@@ -16,7 +16,7 @@ public class ArticleController extends Controller {
   }
 
   public void add(String cmd) {
-    if( Container.session.isLogined() == false) {
+    if (Container.session.isLogined() == false) {
       System.out.println("로그인 후 이용해주세요.");
       return;
     }
@@ -78,7 +78,7 @@ public class ArticleController extends Controller {
   }
 
   public void delete(Rq rq, String cmd) {
-    if( Container.session.isLogined() == false) {
+    if (Container.session.isLogined() == false) {
       System.out.println("로그인 후 이용해주세요.");
       return;
     }
@@ -87,6 +87,18 @@ public class ArticleController extends Controller {
 
     if (id == 0) {
       System.out.println("id를 올바르게 입력해주세요.");
+      return;
+    }
+
+    Article article = articleService.getArticleById(id);
+
+    if (article == null) {
+      System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+      return;
+    }
+
+    if (article.memberId != Container.session.loginedMemberId) {
+      System.out.println("권한이 없습니다.");
       return;
     }
 
@@ -99,13 +111,13 @@ public class ArticleController extends Controller {
       return;
     }
 
-   articleService.delete(id);
+    articleService.delete(id);
 
     System.out.printf("%d번 게시글이 삭제되었습니다.\n", id);
   }
 
   public void modify(Rq rq, String cmd) {
-    if( Container.session.isLogined() == false) {
+    if (Container.session.isLogined() == false) {
       System.out.println("로그인 후 이용해주세요.");
       return;
     }
@@ -117,12 +129,24 @@ public class ArticleController extends Controller {
       return;
     }
 
+    Article article = articleService.getArticleById(id);
+
+    if (article == null) {
+      System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+      return;
+    }
+
+    if (article.memberId != Container.session.loginedMemberId) {
+      System.out.println("권한이 없습니다.");
+      return;
+    }
+
     System.out.printf("새 제목 : ");
     String title = sc.nextLine();
     System.out.printf("새 내용 : ");
     String body = sc.nextLine();
 
-   articleService.update(id, title, body);
+    articleService.update(id, title, body);
 
     System.out.println("게시물이 수정되었습니다.");
 
