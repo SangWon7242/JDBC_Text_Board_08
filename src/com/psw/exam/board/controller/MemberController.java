@@ -110,7 +110,7 @@ public class MemberController extends Controller {
     while (true) {
       if(loginIdTryCount >= loginIdTryMaxCount) {
         System.out.println("로그인 아이디를 확인 후 다시 시도해주세요.");
-        continue;
+        return;
       }
 
       System.out.printf("로그인 아이디 : ");
