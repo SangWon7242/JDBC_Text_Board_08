@@ -4,7 +4,9 @@ import com.psw.exam.board.Container;
 import com.psw.exam.board.dto.Article;
 import com.psw.exam.board.dao.ArticleDao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ArticleService {
   private ArticleDao articleDao;
@@ -33,11 +35,17 @@ public class ArticleService {
     articleDao.update(id, title, body);
   }
 
-  public List<Article> getArticles() {
-    return articleDao.getArticles();
-  }
-
   public void increaseHit(int id) {
     articleDao.increaseHit(id);
+  }
+
+  public List<Article> getForPrintArticleById(int page, int pageItemCount) {
+    int limitFrom = (page - 1) * pageItemCount;
+    int limitTake = pageItemCount;
+
+    Map<String, Object> args = new HashMap<>();
+    args.put("limitFrom", limitFrom);
+    args.put("limitTake", limitTake);
+    return articleDao.getArticles(args);
   }
 }

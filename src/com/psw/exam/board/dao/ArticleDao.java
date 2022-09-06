@@ -71,13 +71,29 @@ public class ArticleDao {
     DBUtil.update(Container.conn, sql);
   }
 
-  public List<Article> getArticles() {
+  public List<Article> getArticles(Map<String, Object> args) {
     SecSql sql = new SecSql();
+
+    int limitFrom = -1;
+    int limitTake = -1;
+
+    if (args.containsKey("limitFrom")) {
+      limitFrom = (int) args.get("limitFrom");
+    }
+
+    if (args.containsKey("limitTake")) {
+      limitTake = (int) args.get("limitTake");
+    }
+
     sql.append("SELECT A.*, M.name AS extra__writer");
     sql.append("FROM article AS A");
     sql.append("INNER JOIN member AS M");
     sql.append("ON A.memberId = M.id");
     sql.append("ORDER BY A.id DESC");
+
+    if( limitFrom != -1) {
+      sql.append("Limit ?, ?", limitFrom, limitTake);
+    }
 
     List<Map<String, Object>> articleListMap = DBUtil.selectRows(Container.conn, sql);
 
@@ -99,4 +115,5 @@ public class ArticleDao {
 
     DBUtil.update(Container.conn, sql);
   }
+
 }

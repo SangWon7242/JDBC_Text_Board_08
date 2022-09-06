@@ -34,10 +34,17 @@ public class ArticleController extends Controller {
     System.out.printf("%d번 게시물이 생성되었습니다.\n", id);
   }
 
-  public void showList(String cmd) {
+  public void showList(Rq rq, String cmd) {
     System.out.println("== 게시물 리스트 ==");
 
-    List<Article> articles = articleService.getArticles();
+    int page = rq.getIntParam("page", 1);
+
+    int pageItemCount = 10;
+
+    // 임시
+    pageItemCount = 5;
+
+    List<Article> articles = articleService.getForPrintArticleById(page, pageItemCount);
 
 
     if (articles.size() == 0) {

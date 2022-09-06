@@ -71,7 +71,7 @@ public class App {
     } else if (rq.getUrlPath().equals("/usr/article/write")) {
       articleController.add(cmd);
     } else if (rq.getUrlPath().equals("/usr/article/list")) {
-      articleController.showList(cmd);
+      articleController.showList(rq, cmd);
     } else if (rq.getUrlPath().equals("/usr/article/detail")) {
       articleController.showDetail(rq, cmd);
     } else if (rq.getUrlPath().equals("/usr/article/delete")) {
