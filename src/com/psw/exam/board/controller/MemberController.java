@@ -93,6 +93,7 @@ public class MemberController extends Controller {
     int id = memberService.join(loginId, loginPw, name);
 
     System.out.printf("%s님 환영합니다.\n", name);
+
   }
 
 
@@ -102,12 +103,21 @@ public class MemberController extends Controller {
 
     System.out.println("== 로그인 ==");
 
+    int loginIdTryMaxCount = 3;
+    int loginIdTryCount = 0;
+
     // 로그인 아이디 입력
     while (true) {
+      if(loginIdTryCount >= loginIdTryMaxCount) {
+        System.out.println("로그인 아이디를 확인 후 다시 시도해주세요.");
+        continue;
+      }
+
       System.out.printf("로그인 아이디 : ");
       loginId = sc.nextLine().trim();
 
       if (loginId.length() == 0) {
+        loginIdTryCount++;
         System.out.println("로그인 아이디를 입력해주세요.");
         continue;
       }
@@ -124,12 +134,12 @@ public class MemberController extends Controller {
 
     Member member = memberService.getMemberByLoginId(loginId);
 
-    int tryMaxCount = 3;
-    int tryCount = 0;
+    int loginPwTryMaxCount = 3;
+    int loginPwTryCount = 0;
 
     // 로그인 비번 입력
     while (true) {
-      if(tryCount >= tryMaxCount) {
+      if(loginPwTryCount >= loginPwTryMaxCount) {
         System.out.println("비밀번호 확인 후 다시 시도해주세요.");
         break;
       }
@@ -142,14 +152,25 @@ public class MemberController extends Controller {
       }
 
       if(member.loginPw.equals(loginPw) == false) {
-        tryCount++;
+        loginPwTryCount++;
         System.out.println("비밀번호가 일치하지 않습니다.");
         continue;
       }
 
       System.out.printf("%s님 환영합니다.\n", member.name);
+      Container.session.loginedMemberId = member.id;
+      Container.session.loginedMember = member;
+
       break;
     }
+  }
 
+  public void whoami() {
+    if ( Container.session.loginedMemberId == -1 ) {
+      System.out.println("로그인 상태가 아닙니다.");
+    }
+    else {
+      System.out.println(Container.session.loginedMember.loginId);
+    }
   }
 }
